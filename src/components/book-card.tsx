@@ -22,13 +22,13 @@ export function BookCard({ book }: BookCardProps) {
         className="group relative overflow-hidden rounded-lg border border-border bg-card shadow-sm active:shadow-md sm:rounded-xl"
       >
         {/* Book Image */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-secondary">
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-gradient-to-br from-cream via-secondary to-cream/50">
           <Image
             src={book.image_path}
             alt={book.title}
             fill
             sizes="(max-width: 640px) 45vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
           />
 
         </div>
