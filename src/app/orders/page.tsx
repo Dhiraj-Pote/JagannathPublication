@@ -103,6 +103,20 @@ function OrderCard({ order }: { order: Order }) {
 export default async function OrdersPage() {
   const supabase = await createClient();
 
+  if (!supabase) {
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        <p className="text-muted-foreground">
+          Authentication is not configured yet. Please{' '}
+          <Link href="/auth/login" className="text-saffron underline hover:text-saffron-dark">
+            log in
+          </Link>{' '}
+          to view your orders.
+        </p>
+      </div>
+    );
+  }
+
   // Get the authenticated user
   const {
     data: { user },

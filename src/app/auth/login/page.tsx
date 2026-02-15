@@ -90,17 +90,19 @@ function LoginContent() {
 
       // Check for existing user profile and create if missing
       const supabase = createClient();
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('id')
-        .eq('phone_number', fullPhone)
-        .single();
+      if (supabase) {
+        const { data: existingUser } = await supabase
+          .from('users')
+          .select('id')
+          .eq('phone_number', fullPhone)
+          .single();
 
-      if (!existingUser) {
-        await supabase.from('users').insert({
-          phone_number: fullPhone,
-          auth_id: data.user.id,
-        });
+        if (!existingUser) {
+          await supabase.from('users').insert({
+            phone_number: fullPhone,
+            auth_id: data.user.id,
+          });
+        }
       }
 
       // Show success briefly, then redirect
