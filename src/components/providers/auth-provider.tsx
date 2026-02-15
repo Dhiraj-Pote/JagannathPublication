@@ -26,6 +26,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const supabase = createClient();
 
+    if (!supabase) {
+      // No Supabase configured — just mark as not loading
+      setIsLoading(false);
+      return;
+    }
+
     // Fetch the initial session
     supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
       setSession(initialSession);

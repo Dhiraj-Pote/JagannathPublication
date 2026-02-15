@@ -18,11 +18,16 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 3. For protected routes, check if the user has an active session
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  // 3. If Supabase isn't configured, allow through
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !key) {
+    return response;
+  }
+
+  // 4. For protected routes, check if the user has an active session
+  const supabase = createServerClient(url, key, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
