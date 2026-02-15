@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 
-// Initialize Razorpay instance with server-side credentials
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET ?? '',
-});
+// Lazy-initialize Razorpay so the build doesn't crash without env vars
+function getRazorpay() {
+  return new Razorpay({
+    key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? '',
+    key_secret: process.env.RAZORPAY_KEY_SECRET ?? '',
+  });
+}
 
 interface CreateOrderRequestBody {
   amount: number;
@@ -50,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Razorpay order
-    const razorpayOrder = await razorpay.orders.create({
+    const razorpayOrder = await getRazorpay().orders.create({
       amount: body.amount, // amount in paise
       currency: 'INR',
       receipt: `order_${Date.now()}`,
