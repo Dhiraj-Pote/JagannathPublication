@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Sparkles, Search, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { Sparkles, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import { PageTransition } from '@/components/page-transition';
 import { BookCard } from '@/components/book-card';
 import { Input } from '@/components/ui/input';
@@ -115,7 +116,7 @@ export function HomeContent({ books }: HomeContentProps) {
         </motion.div>
 
         {/* Books Grid */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-5 lg:gap-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:gap-6">
           {filteredBooks.map((book, index) => (
             <motion.div
               key={book.id}
@@ -137,70 +138,88 @@ export function HomeContent({ books }: HomeContentProps) {
       </section>
 
       {/* Quote of the Day */}
-      <section className="relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/images/maharaj-face.jpg')", backgroundPosition: 'center 39%' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-saffron/60 via-saffron/50 to-gold/40" />
-        <div className="absolute inset-0 bg-black/20" />
+      <section className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="relative overflow-hidden rounded-2xl border border-saffron/15 bg-gradient-to-br from-[#FFF8F0] via-white to-[#FFF5E6] p-6 shadow-sm sm:p-10"
+        >
+          {/* Decorative top accent */}
+          <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-saffron via-gold to-saffron-light" />
 
-        <div className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-          <div className="text-center">
-            {/* Title */}
-            <h2 className="mb-4 font-serif text-xs font-semibold uppercase tracking-widest text-white/90 sm:mb-6 sm:text-sm">
-              Quote of the Day
-            </h2>
+          {/* Decorative quote marks */}
+          <div className="absolute right-4 top-4 font-serif text-6xl leading-none text-saffron/10 sm:right-8 sm:top-6 sm:text-8xl">
+            &ldquo;
+          </div>
 
-            {/* Quote Slider */}
-            <div className="relative">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={quoteIndex}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.4, ease: 'easeInOut' }}
-                >
-                  <blockquote className="mx-auto max-w-2xl px-2">
-                    <p className="font-serif text-base font-medium leading-relaxed text-white sm:text-xl md:text-2xl">
-                      &ldquo;{currentQuote.text}&rdquo;
-                    </p>
-                    <footer className="mt-3 sm:mt-4">
-                      <p className="text-xs font-medium text-gold-light sm:text-sm">
-                        — Śrīla Gour Govinda Swami Mahārāja
-                      </p>
-                      <p className="mt-1 text-[10px] italic text-white/60 sm:text-xs">
-                        {currentQuote.source}
-                      </p>
-                    </footer>
-                  </blockquote>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Navigation Arrows — simple prev/next only */}
-              <div className="mt-5 flex items-center justify-center gap-6 sm:mt-6 sm:gap-8">
-                <button
-                  onClick={goToPrevQuote}
-                  className="flex size-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm active:bg-white/30 sm:size-10"
-                  aria-label="Previous quote"
-                >
-                  <ChevronLeft className="size-4 sm:size-5" />
-                </button>
-                <span className="text-[10px] text-white/50 sm:text-xs">
-                  {quoteIndex + 1} / {quotes.length}
-                </span>
-                <button
-                  onClick={goToNextQuote}
-                  className="flex size-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm active:bg-white/30 sm:size-10"
-                  aria-label="Next quote"
-                >
-                  <ChevronRight className="size-4 sm:size-5" />
-                </button>
+          <div className="relative">
+            {/* Top: avatar + label centered */}
+            <div className="mb-5 flex flex-col items-center gap-2 sm:mb-6">
+              <div className="relative size-10 overflow-hidden rounded-full border-2 border-saffron/30 sm:size-12">
+                <Image
+                  src="/images/maharaj-face.jpg"
+                  alt="Śrīla Gour Govinda Swami Mahārāja"
+                  fill
+                  className="object-cover object-top"
+                  sizes="48px"
+                />
+              </div>
+              <div className="text-center">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-saffron/70 sm:text-xs">
+                  Quote of the Day
+                </p>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">
+                  Śrīla Gour Govinda Swami Mahārāja
+                </p>
               </div>
             </div>
+
+            {/* Quote — horizontal slide animation */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={quoteIndex}
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -60 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                className="text-center"
+              >
+                <blockquote className="mx-auto max-w-xl">
+                  <p className="font-serif text-base font-medium leading-relaxed text-foreground/85 sm:text-lg md:text-xl">
+                    &ldquo;{currentQuote.text}&rdquo;
+                  </p>
+                </blockquote>
+
+                <p className="mt-3 text-[10px] italic text-muted-foreground sm:mt-4 sm:text-xs">
+                  — {currentQuote.source}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Navigation */}
+            <div className="mt-6 flex items-center justify-center gap-4 sm:mt-8">
+              <button
+                onClick={goToPrevQuote}
+                className="flex size-8 items-center justify-center rounded-full border border-saffron/20 text-saffron/60 transition-colors active:bg-saffron/10 sm:size-9"
+                aria-label="Previous quote"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <span className="text-[10px] tabular-nums text-muted-foreground sm:text-xs">
+                {quoteIndex + 1} of {quotes.length}
+              </span>
+              <button
+                onClick={goToNextQuote}
+                className="flex size-8 items-center justify-center rounded-full border border-saffron/20 text-saffron/60 transition-colors active:bg-saffron/10 sm:size-9"
+                aria-label="Next quote"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </section>
     </PageTransition>
   );
