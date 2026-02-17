@@ -114,7 +114,7 @@ export default async function OrdersPage() {
           to view your orders.
         </p>
       </div>
-    );
+    ); 
   }
 
   // Get the authenticated user
